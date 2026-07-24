@@ -292,6 +292,8 @@
   "search__welcome": "Search what I want~~ 😉",
   "setting": "Settings",
   "setting__about": "About LX-M Music",
+  "setting__about_license": "This project inherits the Apache License 2.0 from the upstream repository and is subject to its supplementary terms.",
+  "setting__about_based_on": "This version is incrementally developed on top of LX Music Desktop (github.com/lyswhut/lx-music-desktop).",
   "setting__backup": "Backup & Restore",
   "setting__backup_all": "All Data (\"List\" data and \"Setting\" data)",
   "setting__backup_all_export": "Export",
