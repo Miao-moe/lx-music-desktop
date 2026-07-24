@@ -1,4 +1,4 @@
-# lx-music-desktop 常见问题
+# Lx-m Music 常见问题
 
 本文档已迁移至：<https://lyswhut.github.io/lx-music-doc/desktop/faq>
 
@@ -175,13 +175,13 @@
 
 1. 确保PC端的同步服务已启用成功（若连接码、同步服务地址没有内容，则证明服务启动失败，此时看启用同步功能复选框后面的错误信息自行解决，另外若你不知道端口号是什么意思就不要乱改，或不要改得太大与太小）
 2. 在手机浏览器地址栏输入`http://x.x.x.x:23332/hello` **（注：将`x.x.x.x`换成PC端显示的同步服务地址，`23332`为PC端的端口号）** 后回车，若此地址可以打开并显示 `Hello~::^-^::`则证明移动端与PC端网络已互通，
-3. 若移动端无法打开第2步的地址，则在PC端的浏览器地址栏输入并打开该地址，若可以打开，则要么是被LX Music PC端被电脑防火墙拦截，要么PC端与移动端不在同一个网络下，或者路由器开启了AP隔离（一般在公共网络下会出现这种情况）
+3. 若移动端无法打开第2步的地址，则在PC端的浏览器地址栏输入并打开该地址，若可以打开，则要么是被Lx-m Music PC端被电脑防火墙拦截，要么PC端与移动端不在同一个网络下，或者路由器开启了AP隔离（一般在公共网络下会出现这种情况）
 
 ## 界面异常（界面显示不完整）
 
 ### Windows 10、11界面异常、界面无法显示
 
-尝试添加运行参数 `--disable-gpu-sandbox` 启动，例如：`.\lx-music-desktop.exe --disable-gpu-sandbox`，添加方法可自行百度“给快捷方式加参数”。
+尝试添加运行参数 `--disable-gpu-sandbox` 启动，例如：`.\"Lx-m Music.exe\" --disable-gpu-sandbox`，添加方法可自行百度“给快捷方式加参数”。
 
 若以上方法无效，则尝试将 `--disable-gpu-sandbox` 逐个换成以下参数启动，直到恢复正常为止：
 
@@ -202,7 +202,7 @@
 > 在 windows 操作系统上, 当 DWM 被禁用时, 透明窗口将无法工作。
 
 因此，当 win7 没有使用**Aero**主题时界面将会显示异常，开启AERO的方法请自行百度：`win7开启Aero效果`（开启后可看到任务栏变透明）。<br>
-从`0.14.0`版本起不再强制要求开启透明效果，若你实在不想开启（若非电脑配置太低，墙裂建议开启！），可通过添加运行参数`-dt`来运行程序即可，例如：`.\lx-music-desktop.exe -dt`，添加方法可自行百度“给快捷方式加参数”，该参数的作用是用来控制程序是否使用非透明窗口运行。
+从`0.14.0`版本起不再强制要求开启透明效果，若你实在不想开启（若非电脑配置太低，墙裂建议开启！），可通过添加运行参数`-dt`来运行程序即可，例如：`.\"Lx-m Music.exe\" -dt`，添加方法可自行百度“给快捷方式加参数”，该参数的作用是用来控制程序是否使用非透明窗口运行。
 
 注：启用**Aero**主题后，若软件出现黑边框，则重启软件即可恢复正常。
 
@@ -211,7 +211,7 @@
 ### Linux 下界面异常
 
 根据Electron里issue的[解决方案](https://github.com/electron/electron/issues/2170#issuecomment-736223269)，<br>
-若你遇到透明问题可尝试添加启动参数 `-dha` 来禁用硬件加速，例如：`.\lx-music-desktop.exe -dha`。
+若你遇到透明问题可尝试添加启动参数 `-dha` 来禁用硬件加速，例如：`.\"Lx-m Music.exe\" -dha`。
 
 注：v1.6.0及之后的版本才支持`-dha`参数
 
@@ -315,10 +315,10 @@ Windows 7 未开启 Aero 效果时桌面歌词会有问题，详情看上面的 
 - 以管理员权限打开`cmd`，输入`sfc /scannow`回车等待检查完成重启电脑
 - 若上面的方法**修复、重启**电脑后仍然不行，就自行百度弹出的**错误信息**看下别人是怎么解决的
 
-## MAC OS无法启动软件，提示 lx-music-desktop 已损坏
+## MAC OS无法启动软件，提示 Lx-m Music 已损坏
 
 这是因为软件没有签名，被系统阻止运行，<br>
-在终端里输入 `sudo xattr -rd com.apple.quarantine /Applications/lx-music-desktop.app`，然后输入你的电脑密码即可
+在终端里输入 `sudo xattr -rd com.apple.quarantine /Applications/Lx-m Music.app`，然后输入你的电脑密码即可
 
 还可以参考：
 
@@ -328,11 +328,11 @@ Windows 7 未开启 Aero 效果时桌面歌词会有问题，详情看上面的 
 ## 数据存储路径
 
 默认情况下，软件的数据存储在：
+- Windows：`%APPDATA%/Lx-m Music`
 
-- Windows：`%APPDATA%/lx-music-desktop`
-- Linux：`$XDG_CONFIG_HOME/lx-music-desktop` 或 `~/.config/lx-music-desktop`
-- macOS：`~/Library/Application/lx-music-desktop`
+- Linux：`$XDG_CONFIG_HOME/Lx-m Music` 或 `~/.config/Lx-m Music`
 
+- macOS：`~/Library/Application Support/Lx-m Music`
 在Windows平台下，若程序目录下存在`portable`目录，则自动使用此目录作为数据存储目录（v1.17.0新增）。
 
 ## 杀毒软件提示有病毒或恶意行为
@@ -364,7 +364,7 @@ Windows 7 未开启 Aero 效果时桌面歌词会有问题，详情看上面的 
 
 ## Scheme URL支持
 
-从v1.17.0起支持 Scheme URL，可以使用此功能从浏览器等场景下调用LX Music，我们开发了一个[油猴脚本](https://github.com/lyswhut/lx-music-script#readme)配套使用<br>
+从v1.17.0起支持 Scheme URL，可以使用此功能从浏览器等场景下调用Lx-m Music，我们开发了一个[油猴脚本](https://github.com/lyswhut/lx-music-script#readme)配套使用<br>
 脚本安装地址：<https://greasyfork.org/zh-CN/scripts/438148><br>
 以下是目前可用的Scheme URL调用方式：
 

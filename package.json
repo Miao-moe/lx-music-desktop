@@ -181,6 +181,7 @@
     "music-metadata": "^11.12.3",
     "needle": "github:lyswhut/needle#93299ac841b7e9a9f82ca7279b88aaaeda404060",
     "node-id3": "^0.2.9",
+    "playwright-core": "^1.55.0",
     "sortablejs": "^1.15.7",
     "tunnel": "^0.0.6",
     "undici": "^7.25.0",

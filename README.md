@@ -1,13 +1,13 @@
 <p align="center"><a href="https://github.com/lyswhut/lx-music-desktop"><img width="200" src="https://github.com/lyswhut/lx-music-desktop/blob/master/doc/images/icon.png" alt="lx-music logo"></a></p>
 
-<h1 align="center">LX Music 桌面版（个人增强版）</h1>
+<h1 align="center">Lx-m Music 桌面版（个人增强版）</h1>
 
 <p align="center">
   <a href="https://github.com/miao-moe/lx-music-desktop/releases"><img src="https://img.shields.io/github/release/miao-moe/lx-music-desktop" alt="Release version"></a>
   <a href="https://electronjs.org/releases/stable"><img src="https://img.shields.io/github/package-json/dependency-version/miao-moe/lx-music-desktop/dev/electron/master" alt="Electron version"></a>
 </p>
 
-<p align="center">在 LX Music 桌面版基础上扩展，新增可解耦的扩展音源插件机制与 Cookie 同步功能</p>
+<p align="center">在 Lx-m Music 桌面版基础上扩展，新增可解耦的扩展音源插件机制与 Cookie 同步功能</p>
 
 ---
 
@@ -106,11 +106,11 @@
 
 ### 什么是自定义音源
 
-LX Music 内置的 kw / kg / tx / wy / mg 等音源默认只能拿到 128k 音频（接口限制），
+Lx-m Music 内置的 kw / kg / tx / wy / mg 等音源默认只能拿到 128k 音频（接口限制），
 更高音质（320k / flac / hires）需要由用户手动导入「自定义源」（即一段 JS 脚本）来代理播放链接请求。
 
-自定义源脚本本质上是一个 HTTP 代理：LX Music 把歌曲信息（songmid / hash）和期望音质告诉脚本，
-脚本去对应平台「带 VIP Cookie 请求」拿到高音质音频直链返回给 LX Music。
+自定义源脚本本质上是一个 HTTP 代理：Lx-m Music 把歌曲信息（songmid / hash）和期望音质告诉脚本，
+脚本去对应平台「带 VIP Cookie 请求」拿到高音质音频直链返回给 Lx-m Music。
 
 ### 如何启用高音质
 

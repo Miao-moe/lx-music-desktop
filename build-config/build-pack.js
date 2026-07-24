@@ -9,12 +9,12 @@ const afterPack = require('./build-after-pack')
 * @see https://www.electron.build/configuration/configuration
 */
 const options = {
-  appId: 'cn.toside.music.desktop',
-  productName: 'lx-music-desktop',
+  appId: 'com.lx-m.music.desktop',
+  productName: 'Lx-m Music',
   beforePack,
   afterPack,
   protocols: {
-    name: 'lx-music-protocol',
+    name: 'lx-m-music-protocol',
     schemes: [
       'lxmusic',
     ],
@@ -24,6 +24,7 @@ const options = {
     output: './build',
   },
   files: [
+    'dist/**/*',
     '!node_modules/**/*',
     'node_modules/font-list',
     'node_modules/better-sqlite3/lib',
@@ -35,12 +36,22 @@ const options = {
     'node_modules/node-gyp-build',
     'node_modules/bufferutil',
     'node_modules/utf-8-validate',
+    'node_modules/playwright-core',
     'build/Release/qrc_decode.node',
     'dist/**/*',
   ],
   asar: {
     smartUnpack: false,
   },
+  asarUnpack: [
+    'node_modules/playwright-core/**/*',
+    'node_modules/better-sqlite3/**/*',
+    'node_modules/electron-font-manager/**/*',
+    'node_modules/bufferutil/**/*',
+    'node_modules/utf-8-validate/**/*',
+    'node_modules/node-gyp-build/**/*',
+    '**/*.node',
+  ],
   extraResources: [
     './licenses',
   ],
@@ -68,7 +79,7 @@ const winOptions = {
     allowToChangeInstallationDirectory: true,
     // differentialPackage: true,
     license: './licenses/license.rtf',
-    shortcutName: 'LX Music',
+    shortcutName: 'Lx-m Music',
   },
 }
 /**
@@ -87,9 +98,9 @@ const linuxOptions = {
       // https://specifications.freedesktop.org/desktop-entry-spec/latest/example.html
       // https://developer.gnome.org/documentation/guidelines/maintainer/integrating.html#desktop-files
       entry: {
-        Name: 'LX Music',
-        'Name[zh_CN]': 'LX Music',
-        'Name[zh_TW]': 'LX Music',
+        Name: 'Lx-m Music',
+        'Name[zh_CN]': 'Lx-m Music',
+        'Name[zh_TW]': 'Lx-m Music',
         Encoding: 'UTF-8',
         MimeType: 'x-scheme-handler/lxmusic',
         StartupNotify: 'false',
@@ -128,7 +139,7 @@ const macOptions = {
         path: '/Applications',
       },
     ],
-    title: 'LX Music v${version}',
+    title: 'Lx-m Music v${version}',
   },
 }
 

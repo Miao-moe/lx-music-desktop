@@ -213,7 +213,7 @@ Linux 系统至少需要 `GLIBC_2.29` 版本才能运行。
 
 ## [2.8.0](https://github.com/lyswhut/lx-music-desktop/compare/v2.7.0...v2.8.0) - 2024-06-01
 
-我们发布了关于 LX Music 项目发展调整与新项目计划的说明，
+我们发布了关于 Lx-m Music 项目发展调整与新项目计划的说明，
 详情看： https://github.com/lyswhut/lx-music-desktop/issues/1912
 
 ### 新增
@@ -950,7 +950,7 @@ Linux 系统至少需要 `GLIBC_2.29` 版本才能运行。
 ### 新增
 
 - 新增“便携”功能，在Windows平台下，若程序目录下存在 portable 目录，则自动使用此目录作为数据存储目录
-- 新增 Scheme URL 支持，同时发布lx-music-script项目配合使用（一个油猴脚本，可以在浏览器中的官方平台网页直接调用LX Music），Scheme URL的调用说明看Readme.md文档的Scheme URL支持部分
+- 新增 Scheme URL 支持，同时发布lx-music-script项目配合使用（一个油猴脚本，可以在浏览器中的官方平台网页直接调用Lx-m Music），Scheme URL的调用说明看Readme.md文档的Scheme URL支持部分
 - 新增启动参数`-proxy-server`与`-proxy-bypass-list`，详细介绍看Readme.md文档的启动参数部分
 - 新增桌面歌词是否延迟滚动设置，默认开启，若你不想要桌面歌词延迟滚动可以去设置-桌面歌词设置关掉
 
@@ -981,7 +981,7 @@ Linux 系统至少需要 `GLIBC_2.29` 版本才能运行。
 
 - 播放详情页新增音量控制条
 - 播放详情页新增桌面歌词切换按钮
-- 新增将我的列表保存为TXT、CSV格式，可以去设置-备份与恢复中使用（注意：此类格式的备份目前不支持恢复到LX Music中）
+- 新增将我的列表保存为TXT、CSV格式，可以去设置-备份与恢复中使用（注意：此类格式的备份目前不支持恢复到Lx-m Music中）
 - 新增根据歌曲名、歌手名等字段对列表自动排序的功能，可以在我的列表右击列表名弹出的菜单中使用
 - 新增将播放与下载的歌词转换为繁体中文选项，默认关闭，可在设置-播放设置中开启
 - 现在已允许进入临时播放列表，即：使用歌单详情页、排行榜名称右键菜单的“播放”按钮播放歌曲时，可右击播放封面进入此临时列表
@@ -1193,7 +1193,7 @@ Linux 系统至少需要 `GLIBC_2.29` 版本才能运行。
 
 ## [1.10.0](https://github.com/lyswhut/lx-music-desktop/compare/v1.9.0...v1.10.0) - 2021-05-19
 
-lx music移动端已经发布了，使用习惯仍跟桌面版一样，不过功能、界面仍比较简单，有兴趣的可以去体检一下，项目地址：
+Lx-m Music移动端已经发布了，使用习惯仍跟桌面版一样，不过功能、界面仍比较简单，有兴趣的可以去体检一下，项目地址：
 https://github.com/lyswhut/lx-music-mobile#readme
 
 ### 新增

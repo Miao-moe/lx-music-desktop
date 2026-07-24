@@ -18,6 +18,7 @@ module.exports = {
     'electron-font-manager': 'electron-font-manager',
     bufferutil: 'bufferutil',
     'utf-8-validate': 'utf-8-validate',
+    'playwright-core': 'playwright-core',
     'qrc_decode.node': isDev ? path.join(__dirname, '../../build/Release/qrc_decode.node') : path.join('../build/Release/qrc_decode.node'),
   },
   resolve: {
