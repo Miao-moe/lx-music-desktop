@@ -732,21 +732,6 @@ declare global {
       'cookie.enableFavListSync': boolean
 
       /**
-       * 是否启用动态背景（基于专辑封面，毛玻璃磨砂效果）
-       */
-      'ui.dynamicBackground': boolean
-
-      /**
-       * 动态背景高斯模糊强度（px），范围 0-80
-       */
-      'ui.backgroundBlur': number
-
-      /**
-       * 动态背景亮度（0-100，百分比）
-       */
-      'ui.backgroundBrightness': number
-
-      /**
        * 是否启用平滑动画（页面切换/列表项过渡/弹窗淡入）
        */
       'ui.smoothAnimation': boolean

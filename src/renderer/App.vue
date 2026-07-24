@@ -1,6 +1,5 @@
 <template>
   <div id="container" class="view-container">
-    <dynamic-background />
     <layout-aside id="left" />
     <div id="right">
       <layout-toolbar id="toolbar" />
@@ -22,7 +21,6 @@ import { onMounted } from '@common/utils/vueTools'
 // import BubbleCursor from '@common/utils/effects/cursor-effects/bubbleCursor'
 // import '@common/utils/effects/snow.min'
 import useApp from '@renderer/core/useApp'
-import DynamicBackground from '@renderer/components/common/DynamicBackground.vue'
 import { useSmoothAnimation } from '@renderer/utils/smoothAnimation'
 
 useApp()

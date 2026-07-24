@@ -11,6 +11,8 @@ import {
   onWaiting,
   getErrorCode,
 } from '@renderer/plugins/player'
+import { musicInfo } from '@renderer/store/player/state'
+import { reportPlayHistory } from '@renderer/utils/playHistoryReporter'
 
 
 export default () => {
@@ -27,7 +29,8 @@ export default () => {
   const rOnEnded = onEnded(() => {
     console.log('onEnded')
     window.app_event.playerEnded()
-    // window.app_event.pause()
+    const id = musicInfo.id
+    if (id) void reportPlayHistory(id)
   })
   const rOnError = onError(() => {
     console.log('onError')

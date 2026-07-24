@@ -169,9 +169,6 @@ const defaultSetting: LX.AppSetting = {
   'cookie.enableFavListSync': false,
 
   // ===== UI 增强 =====
-  'ui.dynamicBackground': true,
-  'ui.backgroundBlur': 60,
-  'ui.backgroundBrightness': 35,
   'ui.smoothAnimation': true,
   'ui.animationSpeed': 1.0,
 

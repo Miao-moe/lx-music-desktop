@@ -11,14 +11,6 @@ dd
   div
     .gap-top
       base-checkbox(
-        id="setting_advanced_ui_dynamic_bg"
-        :model-value="appSetting['ui.dynamicBackground']"
-        :label="$t('setting__advanced_ui_dynamic_bg')"
-        @update:model-value="updateSetting({ 'ui.dynamicBackground': $event })"
-      )
-      svg-icon.help-icon(name="help-circle-outline" :aria-label="$t('setting__advanced_ui_dynamic_bg_tip')")
-    .gap-top
-      base-checkbox(
         id="setting_advanced_ui_smooth_anim"
         :model-value="appSetting['ui.smoothAnimation']"
         :label="$t('setting__advanced_ui_smooth_anim')"
@@ -26,29 +18,7 @@ dd
       )
       svg-icon.help-icon(name="help-circle-outline" :aria-label="$t('setting__advanced_ui_smooth_anim_tip')")
 
-dd(v-if="appSetting['ui.dynamicBackground']")
-  h3#advanced_ui_bg_tune {{ $t('setting__advanced_ui_dynamic_bg') }}
-  div
-    .p.gap-top
-      span(style="display: inline-block; width: 130px;") {{ $t('setting__advanced_ui_blur') }}
-      svg-icon.help-icon(name="help-circle-outline" :aria-label="$t('setting__advanced_ui_blur_tip')")
-      span(style="margin-left: 8px; color: var(--color-500); font-size: 12px;") {{ appSetting['ui.backgroundBlur'] }}px
-      base-slider-bar(
-        :value="appSetting['ui.backgroundBlur']"
-        :min="0" :max="80" :step="5"
-        style="display: inline-block; width: 200px; vertical-align: middle; margin-left: 12px;"
-        @change="updateSetting({ 'ui.backgroundBlur': $event })"
-      )
-    .p.gap-top
-      span(style="display: inline-block; width: 130px;") {{ $t('setting__advanced_ui_brightness') }}
-      svg-icon.help-icon(name="help-circle-outline" :aria-label="$t('setting__advanced_ui_brightness_tip')")
-      span(style="margin-left: 8px; color: var(--color-500); font-size: 12px;") {{ appSetting['ui.backgroundBrightness'] }}%
-      base-slider-bar(
-        :value="appSetting['ui.backgroundBrightness']"
-        :min="0" :max="100" :step="5"
-        style="display: inline-block; width: 200px; vertical-align: middle; margin-left: 12px;"
-        @change="updateSetting({ 'ui.backgroundBrightness': $event })"
-      )
+dd
     .p.gap-top
       span(style="display: inline-block; width: 130px;") {{ $t('setting__advanced_ui_anim_speed') }}
       svg-icon.help-icon(name="help-circle-outline" :aria-label="$t('setting__advanced_ui_anim_speed_tip')")
