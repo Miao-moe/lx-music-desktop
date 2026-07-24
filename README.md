@@ -1,6 +1,6 @@
 <p align="center"><a href="https://github.com/lyswhut/lx-music-desktop"><img width="200" src="https://github.com/lyswhut/lx-music-desktop/blob/master/doc/images/icon.png" alt="lx-music logo"></a></p>
 
-<h1 align="center">Lx-m Music 桌面版（个人增强版）</h1>
+<h1 align="center">Lx-m Music 桌面版（增强版）</h1>
 
 <p align="center">
   <a href="https://github.com/miao-moe/lx-music-desktop/releases"><img src="https://img.shields.io/github/release/miao-moe/lx-music-desktop" alt="Release version"></a>
@@ -52,12 +52,11 @@
 
 | 平台 | 关键字段 | 用途 |
 | --- | --- | --- |
-| 网易云音乐 | `MUSIC_U` / `__csrf` | 同步「我喜欢的音乐」、上报播放记录 |
-| QQ 音乐 | `uin` / `qqmusic_key` | 同步自建歌单、上报播放记录 |
-| 酷狗音乐 | `kg_mid` / `kg_user_v` | 同步「我喜欢」、上报播放记录 |
-| 酷我音乐 | `kw_token` | 同步「我喜欢的歌单」、上报播放记录 |
-| 咪咕音乐 | `migu_music_sid` | 同步收藏、上报播放记录 |
-| **Bilibili** | `SESSDATA` / `bili_jct` | 同步收藏视频、上报播放记录 |
+| 网易云音乐 | `MUSIC_U` / `__csrf` | 同步「我喜欢的音乐」 |
+| QQ 音乐 | `uin` / `qqmusic_key` | 同步自建歌单 |
+| 酷狗音乐 | `kg_mid` / `kg_user_v` | 同步「我喜欢」 |
+| 酷我音乐 | `kw_token` | 同步「我喜欢的歌单」 |
+| 咪咕音乐 | `migu_music_sid` | 同步收藏 |
 
 两个独立开关：
 
@@ -81,9 +80,6 @@
 
 #### 界面增强
 
-- **动态背景**：基于当前播放歌曲的专辑封面，应用毛玻璃高斯模糊效果，作为整个应用的背景
-- **背景模糊强度**：0-80px 滑块调节
-- **背景亮度**：0-100% 滑块调节（值越小背景越暗，文字对比度越高）
 - **平滑动画**：全局 CSS 动画系统，控制页面切换/列表项过渡/弹窗淡入
 - **动画速率**：0.5x-1.5x 滑块调节（慢一倍 / 默认 / 快一半）
 
