@@ -22,6 +22,12 @@ import { appSetting } from '@renderer/store/setting'
 /** 音乐平台标识 */
 export type MusicSource = 'wy' | 'tx' | 'kg' | 'kw' | 'mg' | 'bili'
 
+/** 支持歌单同步的音乐平台标识 */
+export type CookieSource = 'wy' | 'tx' | 'kg' | 'kw' | 'mg'
+
+/** 可同步歌单的平台列表 */
+export const COOKIE_SOURCES: CookieSource[] = ['wy', 'tx', 'kg', 'kw', 'mg']
+
 /** 平台对应的设置项 key */
 const SOURCE_SETTING_KEY: Record<MusicSource, 'cookie.wy' | 'cookie.tx' | 'cookie.kg' | 'cookie.kw' | 'cookie.mg' | 'cookie.bili'> = {
   wy: 'cookie.wy',
@@ -87,9 +93,9 @@ export const getCookieValue = (cookie: string, name: string): string | null => {
  * 简单启发式判断：
  *   - 网易云：检查 `MUSIC_U` 字段是否存在
  *   - QQ 音乐：检查 `uin` / `qqmusic_key` 字段是否存在
- *   - 酷狗：检查 `kg_mid` / `kg_user_v` 字段是否存在
- *   - 酷我：检查 `kw_token` 字段是否存在
- *   - 咪咕：检查 `migu_music_sid` 字段是否存在
+ *   - 酷狗：检查 `KuGoo` / `kg_mid` / `kg_user_v` 字段是否存在
+ *   - 酷我：检查 `kw_token` / `userid` 字段是否存在
+ *   - 咪咕：检查 `mg_auth_sid` / `migu_music_sid` / `USER_ID` 字段是否存在
  *   - Bilibili：检查 `SESSDATA` / `bili_jct` 字段是否存在
  */
 export const isCookieValid = (source: MusicSource, cookie?: string): boolean => {
@@ -98,11 +104,20 @@ export const isCookieValid = (source: MusicSource, cookie?: string): boolean => 
   switch (source) {
     case 'wy': return !!getCookieValue(c, 'MUSIC_U') || !!getCookieValue(c, '__csrf')
     case 'tx': return !!getCookieValue(c, 'uin') && !!getCookieValue(c, 'qqmusic_key')
-    case 'kg': return !!getCookieValue(c, 'kg_mid') || !!getCookieValue(c, 'kg_user_v')
-    case 'kw': return !!getCookieValue(c, 'kw_token') || c.includes('Hm_lvt_')
-    case 'mg': return !!getCookieValue(c, 'migu_music_sid') || !!getCookieValue(c, 'USER_ID')
+    case 'kg': return !!getCookieValue(c, 'KuGoo') || !!getCookieValue(c, 'kg_mid') || !!getCookieValue(c, 'kg_user_v')
+    case 'kw': return !!getCookieValue(c, 'kw_token') || !!getCookieValue(c, 'userid') || c.includes('Hm_lvt_')
+    case 'mg': return !!getCookieValue(c, 'mg_auth_sid') || !!getCookieValue(c, 'migu_music_sid') || !!getCookieValue(c, 'USER_ID')
     case 'bili': return !!getCookieValue(c, 'SESSDATA') && !!getCookieValue(c, 'bili_jct')
   }
+}
+
+/**
+ * 判断 Cookie 是否可识别（用于歌单同步前的快速校验，等价于 isCookieValid）
+ * @param source 音乐平台标识
+ * @param cookie 可选 Cookie 字符串，默认读取已保存的值
+ */
+export const isCookieRecognized = (source: CookieSource, cookie?: string): boolean => {
+  return isCookieValid(source, cookie)
 }
 
 /**

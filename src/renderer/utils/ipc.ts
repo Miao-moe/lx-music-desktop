@@ -20,6 +20,15 @@ export const onSettingChanged = (listener: LX.IpcRendererEventListenerParams<Par
   }
 }
 
+export interface CookieLoginResult {
+  cookie: string
+  playlists?: Array<{ id: string, name: string }>
+}
+
+export const loginCookie = async(source: string): Promise<CookieLoginResult> => {
+  return rendererInvoke<string, CookieLoginResult>(WIN_MAIN_RENDERER_EVENT_NAME.cookie_login, source)
+}
+
 export const sendInited = () => {
   rendererSend(WIN_MAIN_RENDERER_EVENT_NAME.inited)
 }

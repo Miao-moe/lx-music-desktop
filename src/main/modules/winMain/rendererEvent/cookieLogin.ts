@@ -1,13 +1,12 @@
-import { WIN_MAIN_RENDERER_EVENT_NAME } from '@common/ipcNames'
+import { app, shell } from 'electron'
+import { existsSync, mkdirSync, rmSync } from 'node:fs'
+import path from 'node:path'
+import { chromium, type Page, type Response } from 'playwright-core'
 import { mainHandle } from '@common/mainIpc'
-import { chromium, type Response } from 'playwright-core'
-import * as path from 'path'
-import * as os from 'os'
-import * as fs from 'fs'
-
-const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
+import { WIN_MAIN_RENDERER_EVENT_NAME } from '@common/ipcNames'
 
 type MusicSource = 'wy' | 'tx' | 'kg' | 'kw' | 'mg'
+
 interface CookieLoginDefinition {
   url: string
   domains: string[]
@@ -62,27 +61,36 @@ const COOKIE_LOGIN_DEFINITIONS: Record<MusicSource, CookieLoginDefinition> = {
   },
 }
 
-// ===== 工具函数 =====
 const loginTasks = new Map<MusicSource, Promise<CookieLoginResult>>()
 
-const getRelevantCookies = (
-  cookies: Array<{ name: string, value: string }>,
-  definition: CookieLoginDefinition,
-) => {
-  const allowed = new Set<string>()
-  for (const group of definition.cookieGroups) {
-    for (const name of group) allowed.add(name)
-  }
-  return cookies
-    .filter(cookie => allowed.has(cookie.name))
-    .filter(cookie => cookie.value)
+const isMusicSource = (source: unknown): source is MusicSource => {
+  return typeof source == 'string' && source in COOKIE_LOGIN_DEFINITIONS
 }
 
-const hasLoginState = (
-  cookies: Array<{ name: string }>,
-  storage: Map<string, string>,
-  definition: CookieLoginDefinition,
-) => {
+const getDefaultBrowserExecutable = async(): Promise<string> => {
+  const browser = await app.getApplicationInfoForProtocol('https://')
+  let executablePath = browser.path
+
+  if (process.platform == 'darwin' && executablePath.endsWith('.app')) {
+    const appName = path.basename(executablePath, '.app')
+    executablePath = path.join(executablePath, 'Contents', 'MacOS', appName)
+  }
+
+  const browserInfo = `${browser.name} ${executablePath}`.toLowerCase()
+  if (!existsSync(executablePath) || /firefox|safari/.test(browserInfo)) {
+    throw new Error('The default browser is not supported by Playwright')
+  }
+  return executablePath
+}
+
+const getRelevantCookies = (cookies: Array<{ name: string, value: string, domain: string }>, definition: CookieLoginDefinition) => {
+  return cookies.filter(cookie => {
+    const domain = cookie.domain.replace(/^\./, '').toLowerCase()
+    return definition.domains.some(rootDomain => domain == rootDomain || domain.endsWith(`.${rootDomain}`))
+  })
+}
+
+const hasLoginState = (cookies: Array<{ name: string }>, storage: Map<string, string>, definition: CookieLoginDefinition) => {
   const names = new Set([...cookies.map(cookie => cookie.name), ...storage.keys()])
   return [...definition.cookieGroups, ...(definition.storageGroups ?? [])]
     .some(group => group.every(name => names.has(name)))
@@ -90,65 +98,55 @@ const hasLoginState = (
 
 const sanitizeCookieValue = (value: string) => value.replace(/[\r\n]/g, '')
 
-const serializeCookies = (
-  cookies: Array<{ name: string, value: string }>,
-  storage: Map<string, string>,
-) => {
+const serializeCookies = (cookies: Array<{ name: string, value: string }>, storage: Map<string, string>) => {
   const values = new Map<string, string>()
   for (const cookie of cookies) values.set(cookie.name, sanitizeCookieValue(cookie.value))
   for (const [name, value] of storage) values.set(name, sanitizeCookieValue(value))
   return Array.from(values, ([name, value]) => `${name}=${value}`).join('; ')
 }
 
-const getRelevantStorage = async(
-  context: Awaited<ReturnType<typeof chromium.launchPersistentContext>>,
-  definition: CookieLoginDefinition,
-) => {
+const getRelevantStorage = async(context: Awaited<ReturnType<typeof chromium.launchPersistentContext>>, definition: CookieLoginDefinition) => {
   const values = new Map<string, string>()
   if (!definition.storageKeys?.length) return values
+
   const keys = new Set(definition.storageKeys)
   for (const page of context.pages()) {
     const entries = await page.evaluate(() => Object.entries(localStorage)).catch(() => [])
     for (const [name, value] of entries) {
-      if (keys.has(name) && value) values.set(name, value as string)
+      if (keys.has(name) && value) values.set(name, value)
     }
   }
   return values
 }
 
 const parseMiguPlaylists = (body: any): CookieLoginPlaylist[] | undefined => {
-  const lists = body?.data?.myCreatedMusicLists?.createdMusicLists
-    ?? body?.myCreatedMusicLists?.createdMusicLists
+  const lists = body?.data?.myCreatedMusicLists?.createdMusicLists ??
+    body?.myCreatedMusicLists?.createdMusicLists
   if (!Array.isArray(lists)) return
-  return lists
-    .map((item: any) => ({
-      id: String(item.musicListId ?? item.id ?? ''),
-      name: String(item.title ?? item.name ?? '').trim(),
-    }))
-    .filter((item: CookieLoginPlaylist) => item.id && item.name)
+  return lists.map((item: any) => ({
+    id: String(item.musicListId ?? item.id ?? ''),
+    name: String(item.title ?? item.name ?? '').trim(),
+  })).filter((item: CookieLoginPlaylist) => item.id && item.name)
 }
 
-// ===== Playwright 登录实现 =====
+const wait = async(milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds))
+
 const loginWithPlaywright = async(source: MusicSource): Promise<CookieLoginResult> => {
   const definition = COOKIE_LOGIN_DEFINITIONS[source]
-  if (!definition) throw new Error(`Cookie login not supported for source: ${source}`)
+  const executablePath = await getDefaultBrowserExecutable()
+  const profilePath = path.join(app.getPath('userData'), 'cookie-login', source)
+  rmSync(profilePath, { recursive: true, force: true })
+  mkdirSync(path.dirname(profilePath), { recursive: true })
 
-  const userDataDir = path.join(os.tmpdir(), `lx-m-cookie-login-${source}-${Date.now()}`)
   let context: Awaited<ReturnType<typeof chromium.launchPersistentContext>> | undefined
-
   try {
-    context = await chromium.launchPersistentContext(userDataDir, {
+    context = await chromium.launchPersistentContext(profilePath, {
+      executablePath,
       headless: false,
-      channel: 'chrome',
-      args: [
-        '--no-first-run',
-        '--no-default-browser-check',
-        '--disable-component-update',
-      ],
+      args: ['--no-first-run', '--no-default-browser-check'],
     })
-
     let miguPlaylists: CookieLoginPlaylist[] | undefined
-    const watchMiguPlaylists = (page: any) => {
+    const watchMiguPlaylists = (page: Page) => {
       if (source != 'mg') return
       page.on('response', (response: Response) => {
         if (!response.url().includes('/pc/user/home-page/v2.0')) return
@@ -173,7 +171,6 @@ const loginWithPlaywright = async(source: MusicSource): Promise<CookieLoginResul
         if (source == 'mg' && miguPlaylists == null) {
           await page.reload({ waitUntil: 'domcontentloaded', timeout: 30_000 }).catch(() => {})
           const playlistDeadline = Date.now() + 8_000
-          // mg 歌单由 response 监听器在 reAfter reload 后异步填充
           // eslint-disable-next-line no-unmodified-loop-condition
           while (miguPlaylists == null && Date.now() < playlistDeadline) await wait(250)
         }
@@ -183,31 +180,36 @@ const loginWithPlaywright = async(source: MusicSource): Promise<CookieLoginResul
         const cookie = serializeCookies(finalCookies, finalStorage)
         if (cookie) return { cookie, playlists: miguPlaylists }
       }
-      await wait(1000)
+      await wait(1_000)
     }
-
-    throw new Error(`Cookie login timed out for source: ${source}`)
+    throw new Error('Login timed out')
   } finally {
-    if (context) {
-      await context.close().catch(() => {})
-      // 等待浏览器完全关闭后清理临时 profile
-      await wait(2000)
-    }
-    try { fs.rmSync(userDataDir, { recursive: true, force: true }) } catch {}
+    await context?.close().catch(() => {})
+    try {
+      rmSync(profilePath, { recursive: true, force: true })
+    } catch {}
   }
 }
 
 const login = async(source: MusicSource): Promise<CookieLoginResult> => {
-  if (loginTasks.has(source)) return loginTasks.get(source)!
-  const task = loginWithPlaywright(source).finally(() => { loginTasks.delete(source) })
+  const currentTask = loginTasks.get(source)
+  if (currentTask) return currentTask
+
+  const task = loginWithPlaywright(source).catch(async(error) => {
+    if (error instanceof Error && error.message.includes('not supported')) {
+      await shell.openExternal(COOKIE_LOGIN_DEFINITIONS[source].url).catch(() => {})
+    }
+    throw error
+  }).finally(() => {
+    loginTasks.delete(source)
+  })
   loginTasks.set(source, task)
   return task
 }
 
-// ===== 注册 IPC 处理器 =====
 export default () => {
-  mainHandle<MusicSource, CookieLoginResult>(
-    WIN_MAIN_RENDERER_EVENT_NAME.cookie_login,
-    async({ params: source }) => login(source),
-  )
+  mainHandle<MusicSource, CookieLoginResult>(WIN_MAIN_RENDERER_EVENT_NAME.cookie_login, async({ params: source }) => {
+    if (!isMusicSource(source)) throw new Error('Unsupported music source')
+    return login(source)
+  })
 }
